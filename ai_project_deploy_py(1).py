@@ -52,18 +52,23 @@ paperless_billing = st.selectbox("PaperlessBilling", ["Yes", "No"])
 if st.button("Predict"):
 
     input_data = {
-        "tenure": tenure,
-        "MonthlyCharges": monthly_charges,
-        "TotalCharges": total_charges,
-        "Contract": contract,
-        "InternetService": internet_service,
-        "PaymentMethod": payment_method,
-        "OnlineSecurity": online_security,
-        "TechSupport": tech_support,
-        "PaperlessBilling": paperless_billing
+        "tenure": float(tenure),
+        "MonthlyCharges": float(monthly_charges),
+        "TotalCharges": float(total_charges),
+        "Contract": str(contract),
+        "InternetService": str(internet_service),
+        "PaymentMethod": str(payment_method),
+        "OnlineSecurity": str(online_security),
+        "TechSupport": str(tech_support),
+        "PaperlessBilling": str(paperless_billing)
     }
 
     input_df = pd.DataFrame([input_data])
+
+    # Ensure column order matches training
+    input_df = input_df[model.feature_names_in_]
+
+    prediction = model.predict(input_df)
 
     # FORCE column alignment with training schema
     input_df = input_df.reindex(columns=model.feature_names_in_)
